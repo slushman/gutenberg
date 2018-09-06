@@ -90,6 +90,7 @@ const gutenbergPackages = [
 	'is-shallow-equal',
 	'keycodes',
 	'list-reusable-blocks',
+	'notices',
 	'nux',
 	'plugins',
 	'redux-routine',

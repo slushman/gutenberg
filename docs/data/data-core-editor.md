@@ -1048,18 +1048,6 @@ before falling back to serialization of block state.
 
 Post content.
 
-### getNotices
-
-Returns the user notices array.
-
-*Parameters*
-
- * state: Global application state.
-
-*Returns*
-
-List of notices.
-
 ### canInsertBlockType
 
 Determines if the given block type is allowed to be inserted, and, if
@@ -1614,26 +1602,6 @@ Returns an action object used in signalling that the user has begun to type.
 
 Returns an action object used in signalling that the user has stopped typing.
 
-### createNotice
-
-Returns an action object used to create a notice.
-
-*Parameters*
-
- * status: The notice status.
- * content: The notice content.
- * options: The notice options.  Available options:
-                             `id` (string; default auto-generated)
-                             `isDismissible` (boolean; default `true`).
-
-### removeNotice
-
-Returns an action object used to remove a notice.
-
-*Parameters*
-
- * id: The notice id.
-
 ### updatePostLock
 
 Returns an action object used to lock the editor.
@@ -1736,10 +1704,4 @@ Returns an action object used in signalling that the editor settings have been u
 
  * settings: Updated settings
 
-### enablePublishSidebar
-
-Returns an action object used in signalling that the user has enabled the publish sidebar.
-
-### disablePublishSidebar
-
-Returns an action object used in signalling that the user has disabled the publish sidebar.
+### createNotice

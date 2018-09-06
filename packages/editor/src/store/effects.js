@@ -14,7 +14,6 @@ import {
 	synchronizeBlocksWithTemplate,
 } from '@wordpress/blocks';
 import { __ } from '@wordpress/i18n';
-import { speak } from '@wordpress/a11y';
 
 /**
  * Internal dependencies
@@ -286,10 +285,6 @@ export default {
 	RECEIVE_REUSABLE_BLOCKS: receiveReusableBlocks,
 	CONVERT_BLOCK_TO_STATIC: convertBlockToStatic,
 	CONVERT_BLOCK_TO_REUSABLE: convertBlockToReusable,
-	CREATE_NOTICE( { notice: { content, spokenMessage } } ) {
-		const message = spokenMessage || content;
-		speak( message, 'assertive' );
-	},
 	REMOVE_BLOCKS: [
 		selectPreviousBlock,
 		ensureDefaultBlock,
