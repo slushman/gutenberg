@@ -7,7 +7,7 @@ import classnames from 'classnames';
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { Dashicon, TextButton } from '@wordpress/components';
+import { Dashicon, Button } from '@wordpress/components';
 import { Component } from '@wordpress/element';
 import { withSelect, withDispatch } from '@wordpress/data';
 import { displayShortcut } from '@wordpress/keycodes';
@@ -77,14 +77,15 @@ export class PostSavedState extends Component {
 		}
 
 		return (
-			<TextButton
+			<Button
 				className="editor-post-save-draft"
 				onClick={ onSave }
 				icon="cloud-upload"
 				shortcut={ displayShortcut.primary( 's' ) }
+				isText
 			>
 				{ __( 'Save Draft' ) }
-			</TextButton>
+			</Button>
 		);
 	}
 }
