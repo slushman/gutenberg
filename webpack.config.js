@@ -84,6 +84,7 @@ const gutenbergPackages = [
 	'editor',
 	'element',
 	'escape-html',
+	'format-library',
 	'hooks',
 	'html-entities',
 	'i18n',
