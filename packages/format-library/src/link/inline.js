@@ -27,15 +27,15 @@ import PositionedAtSelection from './positioned-at-selection';
 
 const stopKeyPropagation = ( event ) => event.stopPropagation();
 
-function getLinkAttributesFromFormat( { attributes: { href = '', target } = {} } = {} ) {
-	return { href, target };
+function getLinkAttributesFromFormat( { attributes: { url = '', target } = {} } = {} ) {
+	return { url, target };
 }
 
-function createLinkFormat( { href, opensInNewWindow } ) {
+function createLinkFormat( { url, opensInNewWindow } ) {
 	const format = {
-		type: 'a',
+		type: 'core/link',
 		attributes: {
-			href,
+			url,
 		},
 	};
 
@@ -51,7 +51,7 @@ function isShowingInput( props, state ) {
 	return props.addingLink || state.editLink;
 }
 
-const LinkEditor = ( { inputValue, onChangeInputValue, onKeyDown, submitLink } ) => (
+const LinkEditor = ( { value, onChangeInputValue, onKeyDown, submitLink } ) => (
 	// Disable reason: KeyPress must be suppressed so the block doesn't hide the toolbar
 	/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 	<form
@@ -60,13 +60,13 @@ const LinkEditor = ( { inputValue, onChangeInputValue, onKeyDown, submitLink } )
 		onKeyDown={ onKeyDown }
 		onSubmit={ submitLink }
 	>
-		<URLInput value={ inputValue } onChange={ onChangeInputValue } />
+		<URLInput value={ value } onChange={ onChangeInputValue } />
 		<IconButton icon="editor-break" label={ __( 'Apply' ) } type="submit" />
 	</form>
 	/* eslint-enable jsx-a11y/no-noninteractive-element-interactions */
 );
 
-const LinkViewer = ( { href, editLink } ) => (
+const LinkViewer = ( { url, editLink } ) => (
 	// Disable reason: KeyPress must be suppressed so the block doesn't hide the toolbar
 	/* eslint-disable jsx-a11y/no-static-element-interactions */
 	<div
@@ -75,9 +75,9 @@ const LinkViewer = ( { href, editLink } ) => (
 	>
 		<ExternalLink
 			className="editor-format-toolbar__link-container-value"
-			href={ href }
+			href={ url }
 		>
-			{ filterURLForDisplay( safeDecodeURI( href ) ) }
+			{ filterURLForDisplay( safeDecodeURI( url ) ) }
 		</ExternalLink>
 		<IconButton icon="edit" label={ __( 'Edit' ) } onClick={ editLink } />
 	</div>
@@ -99,12 +99,12 @@ class InlineLinkUI extends Component {
 	}
 
 	static getDerivedStateFromProps( props, state ) {
-		const { href, target } = getLinkAttributesFromFormat( props.link );
+		const { url, target } = getLinkAttributesFromFormat( props.link );
 		const opensInNewWindow = target === '_blank';
 
 		if ( ! isShowingInput( props, state ) ) {
-			if ( href !== state.inputValue ) {
-				return { inputValue: href };
+			if ( url !== state.inputValue ) {
+				return { inputValue: url };
 			}
 
 			if ( opensInNewWindow !== state.opensInNewWindow ) {
@@ -138,8 +138,8 @@ class InlineLinkUI extends Component {
 
 		// Apply now if URL is not being edited.
 		if ( ! isShowingInput( this.props, this.state ) ) {
-			const { href } = getLinkAttributesFromFormat( link );
-			onChange( applyFormat( value, createLinkFormat( { href, opensInNewWindow } ) ) );
+			const { url } = getLinkAttributesFromFormat( link );
+			onChange( applyFormat( value, createLinkFormat( { url, opensInNewWindow } ) ) );
 		}
 	}
 
@@ -151,11 +151,13 @@ class InlineLinkUI extends Component {
 	submitLink( event ) {
 		const { link, value, onChange, speak } = this.props;
 		const { inputValue, opensInNewWindow } = this.state;
-		const href = prependHTTP( inputValue );
-		const format = createLinkFormat( { href, opensInNewWindow } );
+		const url = prependHTTP( inputValue );
+		const format = createLinkFormat( { url, opensInNewWindow } );
+
+		event.preventDefault();
 
 		if ( isCollapsed( value ) && link === undefined ) {
-			const toInsert = applyFormat( create( { text: href } ), format, 0, href.length );
+			const toInsert = applyFormat( create( { text: url } ), format, 0, url.length );
 			onChange( insert( value, toInsert ) );
 		} else {
 			onChange( applyFormat( value, format ) );
@@ -166,8 +168,6 @@ class InlineLinkUI extends Component {
 		if ( ! link ) {
 			speak( __( 'Link added.' ), 'assertive' );
 		}
-
-		event.preventDefault();
 	}
 
 	resetState() {
@@ -183,7 +183,7 @@ class InlineLinkUI extends Component {
 		}
 
 		const { inputValue, opensInNewWindow } = this.state;
-		const { href } = getLinkAttributesFromFormat( link );
+		const { url } = getLinkAttributesFromFormat( link );
 		const showInput = isShowingInput( this.props, this.state );
 
 		return (
@@ -204,14 +204,14 @@ class InlineLinkUI extends Component {
 					>
 						{ showInput ? (
 							<LinkEditor
-								inputValue={ inputValue }
+								value={ inputValue }
 								onChangeInputValue={ this.onChangeInputValue }
 								onKeyDown={ this.onKeyDown }
 								submitLink={ this.submitLink }
 							/>
 						) : (
 							<LinkViewer
-								href={ href }
+								url={ url }
 								editLink={ this.editLink }
 							/>
 						) }
